@@ -1,17 +1,27 @@
 import Leap, sys, thread, time
 from Leap import CircleGesture, KeyTapGesture, ScreenTapGesture, SwipeGesture
 
-numberA = 10	
-numberB = 20
-numberC = 30
+numberA = 100	
+numberB = 200
+numberC = 300
 
 class LeapMotionListener(Leap.Listener):
 	finger_names = ['Thumb','Index','Middle','Ring','Pinky']
 	bone_names = ['Metacarpel','Proximal','Intermediate','Distal']
 	state_names = ['STATE_INVALID','STATE_START','STATE_UPDATE','STATE_END']
 	
+	
+	print "There are 100 boxes of cookie A, 200 boxes of cookie B, and 300 boxes of cookie C. "
+	print "To keep track of how many boxes of each types of cookie is left, use different hand gestures to represent the selling of cookies."
+	print "If cookie A is sold, have the index finger placed horizontally above the sensor first and make a circle motion to decrement the cookie A box number"
+	print "If cookie B is sold, have the index finger placed horizontally above the sensor first and move forward horizontally to decrement the cookie B box number"
+	print "If cookie C is sold, have the index finger placed horizontally above the sensor first and tap down vertically to decrement the cookie C box number"
+	print "If multiple boxes of the same type of cookie is sold, please remove the entire hand away from the sensor and repeat the steps stated above"
+		
+	
+	
 	def on_init(self, controller):
-		print "Initialized"
+		print "Leap Motion Sensor Initialized"
 		
 	def on_connect(self, controller):
 		print "Motion Sensor Connected"
@@ -57,7 +67,6 @@ class LeapMotionListener(Leap.Listener):
 					bone = finger.bone(b)
 					print "Bone: " + self.bone_names[bone.type] + " Start: " + str(bone.prev_joint) + " End: " + str(bone.next_joint) + " Direction: " + str(bone.direction)
 			"""
-			
 		
 		for gesture in frame.gestures():
 			hand = frame.hands
@@ -68,18 +77,16 @@ class LeapMotionListener(Leap.Listener):
 				if circle.pointable.direction.angle_to(circle.normal) <= Leap.PI/2:
 					clockwiseness = "clockwise"
 				else:
-					clockwiseness = "counter-clockwise"
-					
+					clockwiseness = "counter-clockwise"	
 				swept_angle = 0
 				if circle.state != Leap.Gesture.STATE_START:
 					previous = CircleGesture(controller.frame(1).gesture(circle.id))
 					swept_angle = (circle.progress - previous.progress) * 2 * Leap.PI
-				
 				print "ID: " + str(circle.id) + " Progress: " + str(circle.progress) + " Radius: " + str(circle.radius) + " Swept Angle: " + str(swept_angle * Leap.RAD_TO_DEG) + " " + clockwiseness
 				"""	
 				if circle.state == Leap.Gesture.STATE_START:
 					numberA -= 1
-					print "The number of boxes for cookie A is: " + str(numberA)
+					print "The number of boxes left for cookie A is: " + str(numberA)
 			
 			"""if gesture.type == Leap.Gesture.TYPE_SWIPE:
 				swipe = SwipeGesture(gesture)
@@ -94,13 +101,13 @@ class LeapMotionListener(Leap.Listener):
 			if gesture.type == Leap.Gesture.TYPE_SCREEN_TAP:
 				screentap = ScreenTapGesture(gesture)
 				numberB -= 1
-				print "The number of boxes for cookie B is: " + str(numberB)
+				print "The number of boxes left for cookie B is: " + str(numberB)
 				"""print "Screen Tap ID: " + str(screentap.id) + " State: " + self.state_names[gesture.state]"""
 			
 			if gesture.type == Leap.Gesture.TYPE_KEY_TAP:
 				keytap = KeyTapGesture(gesture)
 				numberC -= 1
-				print "The number of boxes for cookie C is: " + str(numberC)
+				print "The number of boxes left for cookie C is: " + str(numberC)
 				"""print "Key Tap ID: " + str(keytap.id) + " State: " + self.state_names[gesture.state]"""
 			
 def main():
